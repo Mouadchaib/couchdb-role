@@ -1,0 +1,13 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: shifteo
+  description: couchdb for ubuntu Debian
+  platforms:
+  - name: Debian
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all

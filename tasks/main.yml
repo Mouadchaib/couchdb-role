@@ -1,0 +1,26 @@
+---
+# Variable setup.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Define couchdb_local_conf_path.
+  set_fact:
+    couchdb_local_conf_path: "{{ __couchdb_local_conf_path }}"
+  when: couchdb_local_conf_path is not defined
+
+# Setup/install tasks.
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Copy couchdb configuration in place.
+  template:
+    src: settings.ini.j2
+    dest: "{{ couchdb_local_conf_path }}/settings.ini"
+    owner: couchdb
+    group: couchdb
+    mode: 0644
+  notify:
+    - restart couchdb
+
+- name: Ensure couchdb is started and enabled to start at boot.
+  service: name=couchdb state=started enabled=yes
